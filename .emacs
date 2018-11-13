@@ -1,7 +1,10 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (show-paren-mode 1)
 
-(add-to-list 'exec-path "/usr/local/bin")
+;;(add-to-list 'exec-path "/usr/local/bin")
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))
+
 
 (require 'dired-x)
 (setq dired-omit-files "^\\...+$")
@@ -41,7 +44,7 @@
  '(custom-enabled-themes (quote (deeper-blue)))
  '(package-selected-packages
    (quote
-    (auto-complete w3m clang-format format-all java-imports dired-recent dired-quick-sort ggtags magit org plantuml-mode markdown-mode+ markdown-mode))))
+    (json-mode auto-complete w3m clang-format format-all java-imports dired-recent dired-quick-sort ggtags magit org plantuml-mode markdown-mode+ markdown-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -80,3 +83,10 @@
 
 (global-set-key [(meta shift up)]  'move-line-up)
 (global-set-key [(meta shift down)]  'move-line-down)
+
+
+(recentf-mode 1)
+(global-set-key "\C-x\C-r" 'recentf-open-files)
+
+(setq inhibit-startup-message t)
+(dired "~")
