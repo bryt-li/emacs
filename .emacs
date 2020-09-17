@@ -20,6 +20,8 @@
         ("melpa-stable" . "https://stable.melpa.org/packages/")))
 
 (package-initialize)
+(when (not package-archive-contents)
+  (package-refresh-contents))
 
 ;; === CUSTOM CHECK FUNCTION ===
 (defun ensure-package-installed (&rest packages)
@@ -35,6 +37,8 @@
 ;; === List my packages ===
 ;; simply add package names to the list
 (ensure-package-installed
+   'better-defaults
+   'material-theme
    'auto-complete
    'prettier-js
    'cnfonts
@@ -52,8 +56,14 @@
    'plantuml-mode
    'markdown-mode
    'markdown-mode+
+   'reformatter
+   'elpy
+   'python-black
    ;; ... etc
 )
+
+(setq inhibit-startup-message t)
+(global-linum-mode t)
 
 (global-set-key (kbd "M-o") (lambda () (interactive)(previous-line)(end-of-line)(newline-and-indent)))
 (global-set-key (kbd "C-o") (lambda () (interactive)(end-of-line)(newline-and-indent)))
@@ -140,7 +150,7 @@
  '(custom-enabled-themes (quote (deeper-blue)))
  '(package-selected-packages
    (quote
-    (dart-mode dumb-jump prettier-js vue-mode vue-html-mode eslint-fix exec-path-from-shell web-mode js2-mode flycheck ansible yaml-mode drag-stuff cnfonts json-mode auto-complete w3m clang-format format-all java-imports dired-recent dired-quick-sort ggtags magit org plantuml-mode markdown-mode+ markdown-mode))))
+    (reformatter python-black dart-mode dumb-jump prettier-js vue-mode vue-html-mode eslint-fix exec-path-from-shell web-mode js2-mode flycheck ansible yaml-mode drag-stuff cnfonts json-mode auto-complete w3m clang-format format-all java-imports dired-recent dired-quick-sort ggtags magit org plantuml-mode markdown-mode+ markdown-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -155,6 +165,10 @@
 (add-hook 'find-file-hook (lambda ()(flyspell-mode)))
 
 (add-hook 'java-mode-hook 'java-imports-scan-file)
+
+(elpy-enable)
+(dolist (hook '(python-mode-hook))
+    (add-hook hook (lambda () (python-black-on-save-mode 1))))
 
 (dolist (hook '(text-mode-hook))
     (add-hook hook (lambda () (flyspell-mode 1))))
@@ -198,8 +212,6 @@
 ;; enable drag-stuff on all buffer
 (drag-stuff-global-mode)
 
-(setq inhibit-startup-message t)
-
 ;;copying lines without selecting them
 ;; http://emacs-fu.blogspot.com/2009/11/copying-lines-without-selecting-them.html
 ;; https://emacs.stackexchange.com/questions/2347/kill-or-copy-current-line-with-minimal-keystrokes
@@ -242,4 +254,7 @@
 				 )
 
 
+(load-theme 'material t)
+
 (dired "~")
+
